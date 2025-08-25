@@ -1,0 +1,10 @@
+:root{--bg:#fff;--fg:#0f172a}
+body{font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--fg);padding:24px}
+main{display:flex;gap:24px}
+section{background:#f8fafc;padding:16px;border-radius:8px;min-width:280px}
+.swatches{display:flex;gap:8px}
+.swatches .sw{width:48px;height:48px;border-radius:6px;border:1px solid rgba(0,0,0,0.06)}
+.sample{padding:12px;margin-top:12px;border-radius:6px}
+.card.title{font-weight:700}
+.chart-sample{height:96px;background:linear-gradient(90deg,rgba(11,110,253,0.12),rgba(15,207,223,0.08));display:flex;align-items:center;justify-content:center;border-radius:6px}
+button{margin-top:12px;padding:8px 12px;border-radius:6px;border:none;background:#0b6efd;color:white}

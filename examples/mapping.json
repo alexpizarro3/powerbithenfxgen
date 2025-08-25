@@ -1,0 +1,13 @@
+{
+  "barChart": {
+    "dataColor": "accent",
+    "outlineColor": "neutral"
+  },
+  "card": {
+    "titleText": "primary",
+    "labelColor": "neutral"
+  },
+  "customVisual.MyVisual": {
+    "primaryColor": "#ff00aa"
+  }
+}

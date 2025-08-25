@@ -1,0 +1,22 @@
+{
+  "name": "pbixthemecreator",
+  "version": "0.1.0",
+  "description": "Small generator: palette -> Power BI theme JSON. Includes instructions for PBIX/PBIT templates.",
+  "main": "scripts/generateTheme.js",
+  "scripts": {
+    "generate": "node scripts/generateTheme.js examples/palette.json out/theme.powerbi.json",
+    "generate:all": "node scripts/generateTheme.js examples/palette.json out/theme.powerbi.json --semantic --css --visuals --out-dir out",
+    "validate": "node scripts/validateTheme.js out/theme.powerbi.json || true",
+  "serve:ui": "npx http-server ui -p 8080",
+    "test": "node tests/runTests.js"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0"
+  },
+  "keywords": ["powerbi","theme","palette","export"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  }
+}

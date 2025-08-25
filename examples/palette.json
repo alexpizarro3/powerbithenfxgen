@@ -1,0 +1,15 @@
+{
+  "name": "Incredible Fusion",
+  "colors": [
+    "#0b6efd",
+    "#0fcfdf",
+    "#7b61ff",
+    "#ff7ab6",
+    "#ffd166",
+    "#06d6a0",
+    "#ef476f"
+  ],
+  "background": "#ffffff",
+  "foreground": "#0f172a",
+  "tableAccent": "#0b6efd"
+}
