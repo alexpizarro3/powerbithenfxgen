@@ -13,6 +13,7 @@ import {
   Shuffle
 } from 'lucide-react';
 import { generateRandomPalette } from '@/lib/colors';
+import { toast } from 'sonner';
 
 export function Toolbar() {
   const { 
@@ -23,13 +24,16 @@ export function Toolbar() {
     viewMode,
     isGenerating,
     colors,
-    setColors
+  setColors,
+  compactMode,
+  toggleCompactMode
   } = usePaletteStore();
 
   const handleGenerateFromCoolors = () => {
     // Generate using Coolors.co inspired algorithm
     const newPalette = generateRandomPalette(colors.length || 5);
-    setColors(newPalette);
+  setColors(newPalette);
+  toast.success('Generated new palette');
   };
 
   const handleShufflePalette = () => {
@@ -37,21 +41,22 @@ export function Toolbar() {
       ...color,
       hex: color.locked ? color.hex : generateRandomPalette(1)[0].hex
     }));
-    setColors(unlockedColors);
+  setColors(unlockedColors);
+  toast('Shuffled unlocked colors');
   };
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
+    <div className="sticky top-0 z-40 flex items-center justify-between p-3 md:p-4 bg-white/90 backdrop-blur border-b border-gray-200">
       {/* Left Section - Logo & Title */}
       <div className="flex items-center gap-3">
         <div className="p-2 bg-blue-50 rounded-lg">
           <Palette className="w-6 h-6 text-blue-600" />
         </div>
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">
+          <h1 className="text-lg md:text-xl font-semibold text-gray-900">
             PBIX Theme Creator
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="hidden md:block text-sm text-gray-500">
             Create beautiful Power BI themes
           </p>
         </div>
@@ -62,7 +67,7 @@ export function Toolbar() {
         <motion.button
           onClick={handleGenerateFromCoolors}
           disabled={isGenerating}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-2 px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -83,7 +88,7 @@ export function Toolbar() {
       </div>
 
       {/* Right Section - Actions */}
-      <div className="flex items-center gap-2">
+  <div className="flex items-center gap-2">
         {/* View Mode Toggle */}
         <div className="flex bg-gray-100 rounded-lg p-1">
           <button
@@ -110,9 +115,18 @@ export function Toolbar() {
           </button>
         </div>
 
+        {/* Compact Toggle */}
+        <button
+          onClick={toggleCompactMode}
+          className={`px-3 py-2 rounded-lg text-sm border ${compactMode ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}
+          title="Toggle compact mode"
+        >
+          {compactMode ? 'Compact: On' : 'Compact: Off'}
+        </button>
+
         {/* Import Button */}
         <motion.button
-          onClick={() => setShowImportModal(true)}
+          onClick={() => { setShowImportModal(true); toast.info('Import dialog opened'); }}
           className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -123,9 +137,9 @@ export function Toolbar() {
 
         {/* Export Button */}
         <motion.button
-          onClick={() => setShowExportModal(true)}
+          onClick={() => { setShowExportModal(true); toast.info('Export dialog opened'); }}
           disabled={colors.length === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-2 px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

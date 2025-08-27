@@ -13,6 +13,7 @@ interface PaletteState {
   showExportModal: boolean;
   showImportModal: boolean;
   viewMode: 'palette' | 'preview';
+  compactMode: boolean;
   
   // Semantic mappings
   semanticTokens: SemanticTokens;
@@ -25,6 +26,7 @@ interface PaletteState {
   removeColor: (index: number) => void;
   reorderColors: (startIndex: number, endIndex: number) => void;
   generateNewPalette: () => void;
+  shuffleUnlocked: () => void;
   
   // Theme actions
   setThemeName: (name: string) => void;
@@ -34,6 +36,8 @@ interface PaletteState {
   setShowExportModal: (show: boolean) => void;
   setShowImportModal: (show: boolean) => void;
   setViewMode: (mode: 'palette' | 'preview') => void;
+  setCompactMode: (value: boolean) => void;
+  toggleCompactMode: () => void;
   
   // Semantic actions
   setSemanticTokens: (tokens: SemanticTokens) => void;
@@ -51,6 +55,7 @@ export const usePaletteStore = create<PaletteState>()(
       showExportModal: false,
       showImportModal: false,
       viewMode: 'palette',
+  compactMode: false,
       semanticTokens: {
         primary: '#3b82f6',
         accent: '#10b981',
@@ -123,6 +128,15 @@ export const usePaletteStore = create<PaletteState>()(
         }, 300);
       },
 
+      shuffleUnlocked: () => {
+        const { generateRandomPalette } = require('@/lib/colors');
+        const state = get();
+        const randoms = generateRandomPalette(state.colors.length);
+        set({
+          colors: state.colors.map((c, i) => c.locked ? c : { ...c, hex: randoms[i].hex }),
+        }, false, 'shuffleUnlocked');
+      },
+
       // Theme actions
       setThemeName: (name) =>
         set({ themeName: name }, false, 'setThemeName'),
@@ -139,6 +153,12 @@ export const usePaletteStore = create<PaletteState>()(
 
       setViewMode: (mode) =>
         set({ viewMode: mode }, false, 'setViewMode'),
+
+      setCompactMode: (value) =>
+        set({ compactMode: value }, false, 'setCompactMode'),
+
+      toggleCompactMode: () =>
+        set((state) => ({ compactMode: !state.compactMode }), false, 'toggleCompactMode'),
 
       // Semantic actions
       setSemanticTokens: (tokens) =>

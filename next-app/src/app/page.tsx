@@ -1,6 +1,9 @@
 'use client';
 
 import React from 'react';
+import { TrendingPalettes } from '@/components/TrendingPalettes';
+import { toast } from 'sonner';
+import { useEventListener } from '../lib/useEventListener';
 import { usePaletteStore } from '@/store/palette';
 import { Toolbar } from '@/components/Toolbar';
 import { PaletteEditor } from '@/components/PaletteEditor';
@@ -8,7 +11,7 @@ import { ExportModal } from '@/components/ExportModal';
 import { generateRandomPalette } from '@/lib/colors';
 
 export default function Home() {
-  const { colors, setColors } = usePaletteStore();
+  const { colors, setColors, shuffleUnlocked, generateNewPalette, compactMode } = usePaletteStore();
 
   // Initialize with a random palette on first load
   React.useEffect(() => {
@@ -18,14 +21,28 @@ export default function Home() {
     }
   }, [colors.length, setColors]);
 
+  // Spacebar -> shuffle unlocked (or generate if empty)
+  useEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.code === 'Space' && !e.repeat) {
+      e.preventDefault();
+      if (colors.length > 0) {
+        shuffleUnlocked();
+        toast.success('Shuffled unlocked colors');
+      } else {
+        generateNewPalette();
+        toast('Generated a new palette');
+      }
+    }
+  });
+
   return (
-    <div className="min-h-screen bg-gray-50">
+  <div className={`min-h-screen bg-gray-50 ${compactMode ? 'text-sm' : ''}`}>
       {/* Header Toolbar */}
       <Toolbar />
       
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto space-y-8">
+      <main className={`container mx-auto ${compactMode ? 'px-3 py-4' : 'px-4 py-8'}`}>
+        <div className={`max-w-6xl mx-auto ${compactMode ? 'space-y-4' : 'space-y-8'}`}>
           {/* Welcome Section */}
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold text-gray-900">
@@ -39,7 +56,7 @@ export default function Home() {
 
           {/* Palette Editor */}
           <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div id="palette-editor" className={`bg-white rounded-xl shadow-sm border border-gray-200 ${compactMode ? 'p-4' : 'p-6'}`}>
               <div className="mb-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Color Palette
@@ -52,8 +69,13 @@ export default function Home() {
               <PaletteEditor />
             </div>
 
+            {/* Trending Palettes */}
+            <div className={`bg-white rounded-xl shadow-sm border border-gray-200 ${compactMode ? 'p-4' : 'p-6'}`}>
+              <TrendingPalettes />
+            </div>
+
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className={`grid grid-cols-1 md:grid-cols-3 ${compactMode ? 'gap-4' : 'gap-6'}`}>
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h4 className="font-semibold text-gray-900 mb-2">🎨 Generate</h4>
                 <p className="text-gray-600 text-sm">

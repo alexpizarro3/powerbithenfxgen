@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePaletteStore } from '@/store/palette';
 import { X, Download, Copy, FileDown } from 'lucide-react';
 import { convertToPowerBITheme, generateCSSVariables, mapToSemanticTokens } from '@/lib/colors';
+import { toast } from 'sonner';
 
 export function ExportModal() {
   const { 
@@ -57,7 +58,8 @@ export function ExportModal() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  URL.revokeObjectURL(url);
+  toast.success(`Downloaded ${filename}`);
   };
 
   const handleCopy = async () => {
@@ -83,11 +85,13 @@ export function ExportModal() {
     }
 
     try {
-      await navigator.clipboard.writeText(content);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
+  await navigator.clipboard.writeText(content);
+  setCopySuccess(true);
+  setTimeout(() => setCopySuccess(false), 2000);
+  toast.success('Copied to clipboard');
     } catch (error) {
       console.error('Failed to copy:', error);
+  toast.error('Failed to copy');
     }
   };
 
